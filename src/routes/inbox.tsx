@@ -1,22 +1,32 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
+import { NewTask } from "~/components/tasks/new";
+import { listTasks } from "~/tasks";
 
 export const Route = createFileRoute("/inbox")({
 	component: RouteComponent,
-	loader: ({ context }) => {
+	loader: async ({ context }) => {
 		if (!context.auth) {
 			throw redirect({ to: "/sign/in" });
 		}
 
 		return {
-			user: {
-				email: context.auth.user.email,
-			},
+			tasks: await listTasks(),
 		};
 	},
 });
 
 function RouteComponent() {
-	const { user } = Route.useLoaderData();
-
-	return <div>Hello {user.email}</div>;
+	const { tasks } = Route.useLoaderData();
+	return (
+		<div className="p-10 space-y-10">
+			<NewTask />
+			<div>
+				{tasks.map((task) => (
+					<div key={task.id}>
+						<h3>{task.content}</h3>
+					</div>
+				))}
+			</div>
+		</div>
+	);
 }

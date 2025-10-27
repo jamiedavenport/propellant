@@ -7,3 +7,5 @@ export const db = drizzle(env.DATABASE_URL, {
 });
 
 export { schema };
+
+export * from "drizzle-orm";
