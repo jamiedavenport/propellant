@@ -10,37 +10,72 @@
 
 import { Route as rootRouteImport } from "./routes/__root";
 import { Route as IndexRouteImport } from "./routes/index";
+import { Route as SignRouteImport } from "./routes/sign";
+import { Route as SignInRouteImport } from "./routes/sign/in";
+import { Route as SignUpRouteImport } from "./routes/sign/up";
 
+const SignRoute = SignRouteImport.update({
+	id: "/sign",
+	path: "/sign",
+	getParentRoute: () => rootRouteImport,
+} as any);
 const IndexRoute = IndexRouteImport.update({
 	id: "/",
 	path: "/",
 	getParentRoute: () => rootRouteImport,
 } as any);
+const SignUpRoute = SignUpRouteImport.update({
+	id: "/up",
+	path: "/up",
+	getParentRoute: () => SignRoute,
+} as any);
+const SignInRoute = SignInRouteImport.update({
+	id: "/in",
+	path: "/in",
+	getParentRoute: () => SignRoute,
+} as any);
 
 export interface FileRoutesByFullPath {
 	"/": typeof IndexRoute;
+	"/sign": typeof SignRouteWithChildren;
+	"/sign/in": typeof SignInRoute;
+	"/sign/up": typeof SignUpRoute;
 }
 export interface FileRoutesByTo {
 	"/": typeof IndexRoute;
+	"/sign": typeof SignRouteWithChildren;
+	"/sign/in": typeof SignInRoute;
+	"/sign/up": typeof SignUpRoute;
 }
 export interface FileRoutesById {
 	__root__: typeof rootRouteImport;
 	"/": typeof IndexRoute;
+	"/sign": typeof SignRouteWithChildren;
+	"/sign/in": typeof SignInRoute;
+	"/sign/up": typeof SignUpRoute;
 }
 export interface FileRouteTypes {
 	fileRoutesByFullPath: FileRoutesByFullPath;
-	fullPaths: "/";
+	fullPaths: "/" | "/sign" | "/sign/in" | "/sign/up";
 	fileRoutesByTo: FileRoutesByTo;
-	to: "/";
-	id: "__root__" | "/";
+	to: "/" | "/sign" | "/sign/in" | "/sign/up";
+	id: "__root__" | "/" | "/sign" | "/sign/in" | "/sign/up";
 	fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
 	IndexRoute: typeof IndexRoute;
+	SignRoute: typeof SignRouteWithChildren;
 }
 
 declare module "@tanstack/react-router" {
 	interface FileRoutesByPath {
+		"/sign": {
+			id: "/sign";
+			path: "/sign";
+			fullPath: "/sign";
+			preLoaderRoute: typeof SignRouteImport;
+			parentRoute: typeof rootRouteImport;
+		};
 		"/": {
 			id: "/";
 			path: "/";
@@ -48,11 +83,38 @@ declare module "@tanstack/react-router" {
 			preLoaderRoute: typeof IndexRouteImport;
 			parentRoute: typeof rootRouteImport;
 		};
+		"/sign/up": {
+			id: "/sign/up";
+			path: "/up";
+			fullPath: "/sign/up";
+			preLoaderRoute: typeof SignUpRouteImport;
+			parentRoute: typeof SignRoute;
+		};
+		"/sign/in": {
+			id: "/sign/in";
+			path: "/in";
+			fullPath: "/sign/in";
+			preLoaderRoute: typeof SignInRouteImport;
+			parentRoute: typeof SignRoute;
+		};
 	}
 }
 
+interface SignRouteChildren {
+	SignInRoute: typeof SignInRoute;
+	SignUpRoute: typeof SignUpRoute;
+}
+
+const SignRouteChildren: SignRouteChildren = {
+	SignInRoute: SignInRoute,
+	SignUpRoute: SignUpRoute,
+};
+
+const SignRouteWithChildren = SignRoute._addFileChildren(SignRouteChildren);
+
 const rootRouteChildren: RootRouteChildren = {
 	IndexRoute: IndexRoute,
+	SignRoute: SignRouteWithChildren,
 };
 export const routeTree = rootRouteImport
 	._addFileChildren(rootRouteChildren)
