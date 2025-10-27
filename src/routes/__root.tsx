@@ -7,6 +7,7 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { getAuth } from "~/auth/functions";
 import styles from "../styles.css?url";
 
 export const Route = createRootRoute({
@@ -30,6 +31,11 @@ export const Route = createRootRoute({
 			},
 		],
 	}),
+	beforeLoad: async () => {
+		return {
+			auth: await getAuth(),
+		};
+	},
 	component: RootComponent,
 });
 

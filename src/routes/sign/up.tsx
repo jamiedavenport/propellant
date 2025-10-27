@@ -1,5 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { type } from "arktype";
+import { auth } from "~/auth/client";
 import { useAppForm } from "~/components/form";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Field } from "~/components/ui/field";
@@ -14,6 +15,7 @@ const formSchema = type({
 });
 
 function RouteComponent() {
+	const router = useRouter();
 	const form = useAppForm({
 		defaultValues: {
 			email: "",
@@ -22,8 +24,14 @@ function RouteComponent() {
 		validators: {
 			onSubmit: formSchema,
 		},
-		onSubmit: (values) => {
-			console.log(values);
+		onSubmit: async ({ value }) => {
+			await auth.signUp.email({
+				name: "",
+				email: value.email,
+				password: value.password,
+			});
+
+			await router.navigate({ to: "/inbox" });
 		},
 	});
 
