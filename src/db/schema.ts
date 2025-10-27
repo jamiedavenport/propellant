@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { date, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { user } from "./auth-schema";
 
 export const task = pgTable("task", {
@@ -6,6 +6,7 @@ export const task = pgTable("task", {
 	createdAt: timestamp().defaultNow().notNull(),
 
 	content: text().notNull(),
+	dueDate: date(),
 	completedAt: timestamp(),
 
 	userId: text()

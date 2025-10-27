@@ -1,4 +1,4 @@
-import { completeTask } from "~/tasks";
+// import { completeTask } from "~/tasks";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 
@@ -6,6 +6,7 @@ type TaskData = {
 	id: string;
 	content: string;
 	completedAt: Date | null;
+	dueDate: string | null;
 };
 
 type Props = {
@@ -16,11 +17,11 @@ export function Task({ task }: Props) {
 	const isCompleted = task.completedAt !== null;
 
 	const handleComplete = async () => {
-		await completeTask({
-			data: {
-				id: task.id,
-			},
-		});
+		// await completeTask({
+		// 	data: {
+		// 		id: task.id,
+		// 	},
+		// });
 	};
 
 	return (
@@ -31,6 +32,7 @@ export function Task({ task }: Props) {
 				>
 					{task.content}
 				</span>
+				<span>{task.dueDate}</span>
 				{!isCompleted && (
 					<Button variant="outline" size="sm" onClick={handleComplete}>
 						Complete

@@ -1,17 +1,21 @@
+import { CalendarIcon } from "@phosphor-icons/react";
 import { useRouter } from "@tanstack/react-router";
 import { type } from "arktype";
 import { ArrowUpIcon } from "lucide-react";
 import { createTask } from "~/tasks";
 import { useAppForm } from "../form";
+import { Calendar } from "../ui/calendar";
 import {
 	InputGroup,
 	InputGroupAddon,
 	InputGroupButton,
 	InputGroupInput,
 } from "../ui/input-group";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 const formSchema = type({
 	content: "string",
+	dueDate: "string.date?",
 });
 
 export function NewTask() {
@@ -19,6 +23,10 @@ export function NewTask() {
 	const form = useAppForm({
 		defaultValues: {
 			content: "",
+			dueDate: null,
+		} as {
+			content: string;
+			dueDate: string | null;
 		},
 		validators: {
 			onSubmit: formSchema,
@@ -27,6 +35,7 @@ export function NewTask() {
 			await createTask({
 				data: {
 					content: value.content,
+					dueDate: value.dueDate,
 				},
 			});
 
@@ -57,29 +66,41 @@ export function NewTask() {
 				/>
 
 				<InputGroupAddon align="block-end">
-					{/* <InputGroupButton
-            variant="outline"
-            className="rounded-full"
-            size="icon-xs"
-          >
-            <IconPlus />
-          </InputGroupButton> */}
-					{/* <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <InputGroupButton variant="ghost">Auto</InputGroupButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              side="top"
-              align="start"
-              className="[--radius:0.95rem]"
-            >
-              <DropdownMenuItem>Auto</DropdownMenuItem>
-              <DropdownMenuItem>Agent</DropdownMenuItem>
-              <DropdownMenuItem>Manual</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu> */}
-					{/* <InputGroupText className="ml-auto">52% used</InputGroupText>
-				<Separator orientation="vertical" className="!h-4" /> */}
+					<form.AppField
+						name="dueDate"
+						children={(field) => (
+							<Popover>
+								<PopoverTrigger asChild>
+									<InputGroupButton variant="ghost">
+										<CalendarIcon weight="fill" />
+										<span>
+											{field.state.value
+												? new Date(field.state.value).toLocaleDateString()
+												: "Due Date"}
+										</span>
+									</InputGroupButton>
+								</PopoverTrigger>
+								<PopoverContent>
+									<Calendar
+										mode="single"
+										selected={
+											field.state.value
+												? new Date(field.state.value)
+												: undefined
+										}
+										onSelect={(date) => {
+											if (date) {
+												field.handleChange(date.toISOString());
+											} else {
+												field.handleChange(null);
+											}
+										}}
+									/>
+								</PopoverContent>
+							</Popover>
+						)}
+					/>
+
 					<InputGroupButton
 						type="submit"
 						variant="default"
