@@ -2,7 +2,7 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { NewTask } from "~/components/tasks/new";
 import { listTasks } from "~/tasks";
 
-export const Route = createFileRoute("/inbox")({
+export const Route = createFileRoute("/_main/inbox")({
 	component: RouteComponent,
 	loader: async ({ context }) => {
 		if (!context.auth) {

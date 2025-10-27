@@ -10,10 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignRouteImport } from './routes/sign'
-import { Route as InboxRouteImport } from './routes/inbox'
+import { Route as MainRouteImport } from './routes/_main'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SignUpRouteImport } from './routes/sign/up'
 import { Route as SignInRouteImport } from './routes/sign/in'
+import { Route as MainInboxRouteImport } from './routes/_main/inbox'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
 
 const SignRoute = SignRouteImport.update({
@@ -21,9 +22,8 @@ const SignRoute = SignRouteImport.update({
   path: '/sign',
   getParentRoute: () => rootRouteImport,
 } as any)
-const InboxRoute = InboxRouteImport.update({
-  id: '/inbox',
-  path: '/inbox',
+const MainRoute = MainRouteImport.update({
+  id: '/_main',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -41,6 +41,11 @@ const SignInRoute = SignInRouteImport.update({
   path: '/in',
   getParentRoute: () => SignRoute,
 } as any)
+const MainInboxRoute = MainInboxRouteImport.update({
+  id: '/inbox',
+  path: '/inbox',
+  getParentRoute: () => MainRoute,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -49,16 +54,16 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/inbox': typeof InboxRoute
   '/sign': typeof SignRouteWithChildren
+  '/inbox': typeof MainInboxRoute
   '/sign/in': typeof SignInRoute
   '/sign/up': typeof SignUpRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/inbox': typeof InboxRoute
   '/sign': typeof SignRouteWithChildren
+  '/inbox': typeof MainInboxRoute
   '/sign/in': typeof SignInRoute
   '/sign/up': typeof SignUpRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -66,22 +71,24 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/inbox': typeof InboxRoute
+  '/_main': typeof MainRouteWithChildren
   '/sign': typeof SignRouteWithChildren
+  '/_main/inbox': typeof MainInboxRoute
   '/sign/in': typeof SignInRoute
   '/sign/up': typeof SignUpRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/inbox' | '/sign' | '/sign/in' | '/sign/up' | '/api/auth/$'
+  fullPaths: '/' | '/sign' | '/inbox' | '/sign/in' | '/sign/up' | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/inbox' | '/sign' | '/sign/in' | '/sign/up' | '/api/auth/$'
+  to: '/' | '/sign' | '/inbox' | '/sign/in' | '/sign/up' | '/api/auth/$'
   id:
     | '__root__'
     | '/'
-    | '/inbox'
+    | '/_main'
     | '/sign'
+    | '/_main/inbox'
     | '/sign/in'
     | '/sign/up'
     | '/api/auth/$'
@@ -89,7 +96,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  InboxRoute: typeof InboxRoute
+  MainRoute: typeof MainRouteWithChildren
   SignRoute: typeof SignRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
@@ -103,11 +110,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/inbox': {
-      id: '/inbox'
-      path: '/inbox'
-      fullPath: '/inbox'
-      preLoaderRoute: typeof InboxRouteImport
+    '/_main': {
+      id: '/_main'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof MainRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -131,6 +138,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignInRouteImport
       parentRoute: typeof SignRoute
     }
+    '/_main/inbox': {
+      id: '/_main/inbox'
+      path: '/inbox'
+      fullPath: '/inbox'
+      preLoaderRoute: typeof MainInboxRouteImport
+      parentRoute: typeof MainRoute
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -140,6 +154,16 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface MainRouteChildren {
+  MainInboxRoute: typeof MainInboxRoute
+}
+
+const MainRouteChildren: MainRouteChildren = {
+  MainInboxRoute: MainInboxRoute,
+}
+
+const MainRouteWithChildren = MainRoute._addFileChildren(MainRouteChildren)
 
 interface SignRouteChildren {
   SignInRoute: typeof SignInRoute
@@ -155,7 +179,7 @@ const SignRouteWithChildren = SignRoute._addFileChildren(SignRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  InboxRoute: InboxRoute,
+  MainRoute: MainRouteWithChildren,
   SignRoute: SignRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
