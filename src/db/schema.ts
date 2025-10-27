@@ -6,6 +6,7 @@ export const task = pgTable("task", {
 	createdAt: timestamp().defaultNow().notNull(),
 
 	content: text().notNull(),
+	completedAt: timestamp(),
 
 	userId: text()
 		.references(() => user.id, { onDelete: "cascade" })

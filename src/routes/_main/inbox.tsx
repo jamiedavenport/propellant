@@ -1,4 +1,5 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
+import { Task } from "~/components/task";
 import { NewTask } from "~/components/tasks/new";
 import { listTasks } from "~/tasks";
 
@@ -10,7 +11,7 @@ export const Route = createFileRoute("/_main/inbox")({
 		}
 
 		return {
-			tasks: await listTasks(),
+			tasks: await listTasks({ data: {} }),
 		};
 	},
 });
@@ -22,9 +23,7 @@ function RouteComponent() {
 			<NewTask />
 			<div>
 				{tasks.map((task) => (
-					<div key={task.id}>
-						<h3>{task.content}</h3>
-					</div>
+					<Task key={task.id} task={task} />
 				))}
 			</div>
 		</div>
