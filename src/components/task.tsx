@@ -2,6 +2,7 @@ import { CheckCircleIcon } from "@phosphor-icons/react";
 import { useRouter } from "@tanstack/react-router";
 import { completeTask, updateTask } from "~/tasks";
 import { DueDate } from "./tasks/due-date";
+import { Tags } from "./tasks/tags";
 import { Button } from "./ui/button";
 
 type TaskData = {
@@ -9,6 +10,11 @@ type TaskData = {
 	content: string;
 	completedAt: Date | null;
 	dueDate: string | null;
+	tags: {
+		tag: {
+			id: string;
+		};
+	}[];
 };
 
 type Props = {
@@ -41,7 +47,7 @@ export function Task({ task }: Props) {
 					<span>Complete</span>
 				</Button>
 			</div>
-			<div>
+			<div className="flex items-center gap-2">
 				<DueDate
 					value={task.dueDate ? new Date(task.dueDate) : null}
 					onChange={async (value) => {
@@ -52,6 +58,13 @@ export function Task({ task }: Props) {
 							},
 						});
 						router.invalidate();
+					}}
+				/>
+				<Tags
+					value={task.tags.map((tag) => tag.tag.id)}
+					onChange={(value) => {
+						// todo
+						// router.invalidate();
 					}}
 				/>
 			</div>

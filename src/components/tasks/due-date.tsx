@@ -14,7 +14,7 @@ export function DueDate({ value, onChange }: Props) {
 		<Popover>
 			<PopoverTrigger asChild>
 				<InputGroupButton variant="ghost">
-					<CalendarIcon weight="fill" />
+					<CalendarIcon weight="duotone" />
 					<span>{value ? dayjs(value).format("DD/MM/YYYY") : "Due Date"}</span>
 				</InputGroupButton>
 			</PopoverTrigger>

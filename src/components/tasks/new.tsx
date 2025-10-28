@@ -10,10 +10,12 @@ import {
 	InputGroupInput,
 } from "../ui/input-group";
 import { DueDate } from "./due-date";
+import { Tags } from "./tags";
 
 const formSchema = type({
 	content: "string",
-	dueDate: "string.date?",
+	dueDate: "string.date | null",
+	tags: "string[]",
 });
 
 export function NewTask() {
@@ -22,9 +24,11 @@ export function NewTask() {
 		defaultValues: {
 			content: "",
 			dueDate: null,
+			tags: [],
 		} as {
 			content: string;
 			dueDate: string | null;
+			tags: string[];
 		},
 		validators: {
 			onSubmit: formSchema,
@@ -34,6 +38,7 @@ export function NewTask() {
 				data: {
 					content: value.content,
 					dueDate: value.dueDate,
+					tags: value.tags,
 				},
 			});
 
@@ -72,6 +77,15 @@ export function NewTask() {
 								onChange={(value) =>
 									field.handleChange(value ? value.toISOString() : null)
 								}
+							/>
+						)}
+					/>
+					<form.AppField
+						name="tags"
+						children={(field) => (
+							<Tags
+								value={field.state.value}
+								onChange={(value) => field.handleChange(value)}
 							/>
 						)}
 					/>

@@ -10,11 +10,12 @@ export const createTask = createServerFn({
 		type({
 			content: "string",
 			dueDate: "string.date | null",
+			tags: "string[]",
 		}),
 	)
 	.middleware([isAuthenticated])
 	.handler(async ({ data, context }) => {
-		return await db
+		const [created] = await db
 			.insert(schema.task)
 			.values({
 				id: crypto.randomUUID(),
@@ -25,6 +26,21 @@ export const createTask = createServerFn({
 				userId: context.user.id,
 			})
 			.returning();
+
+		if (!created) {
+			throw new Error("Task not created");
+		}
+
+		if (data.tags.length > 0) {
+			await db.insert(schema.tags).values(
+				data.tags.map((tag) => ({
+					taskId: created.id,
+					tagId: tag,
+				})),
+			);
+		}
+
+		return created;
 	});
 
 export const updateTask = createServerFn({
@@ -57,16 +73,20 @@ export const listTasks = createServerFn({
 })
 	.middleware([isAuthenticated])
 	.handler(async ({ context }) => {
-		return await db
-			.select()
-			.from(schema.task)
-			.where(
-				and(
-					eq(schema.task.userId, context.user.id),
-					isNull(schema.task.completedAt),
-				),
-			)
-			.orderBy(desc(schema.task.createdAt));
+		return await db.query.task.findMany({
+			with: {
+				tags: {
+					with: {
+						tag: true,
+					},
+				},
+			},
+			where: and(
+				eq(schema.task.userId, context.user.id),
+				isNull(schema.task.completedAt),
+			),
+			orderBy: [desc(schema.task.dueDate)],
+		});
 	});
 
 export const completeTask = createServerFn({
