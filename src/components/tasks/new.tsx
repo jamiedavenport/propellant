@@ -20,6 +20,7 @@ const formSchema = type({
 
 type Props = {
 	dueDate?: Date | null;
+	tags?: string[];
 };
 
 export function NewTask(props: Props) {
@@ -28,7 +29,7 @@ export function NewTask(props: Props) {
 		defaultValues: {
 			content: "",
 			dueDate: props.dueDate ? props.dueDate.toISOString() : null,
-			tags: [],
+			tags: props.tags ?? [],
 		} as {
 			content: string;
 			dueDate: string | null;

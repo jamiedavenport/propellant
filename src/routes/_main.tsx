@@ -84,13 +84,15 @@ function RouteComponent() {
 
 										return (
 											<SidebarMenuItem key={tag.id}>
-												<SidebarMenuButton>
-													{Icon ? (
-														<Icon weight="duotone" />
-													) : (
-														<TagIcon weight="duotone" />
-													)}
-													<span>{tag.name}</span>
+												<SidebarMenuButton asChild>
+													<Link to="/tags/$tagId" params={{ tagId: tag.id }}>
+														{Icon ? (
+															<Icon weight="duotone" />
+														) : (
+															<TagIcon weight="duotone" />
+														)}
+														<span>{tag.name}</span>
+													</Link>
 												</SidebarMenuButton>
 											</SidebarMenuItem>
 										);

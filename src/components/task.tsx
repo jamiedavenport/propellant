@@ -34,8 +34,8 @@ export function Task({ task }: Props) {
 	};
 
 	return (
-		<div>
-			<div className="flex items-center justify-between">
+		<div className="border rounded-lg overflow-hidden shadow-xs">
+			<div className="flex items-center justify-between px-2 py-1 border-b">
 				<span>{task.content}</span>
 				<Button
 					type="button"
@@ -47,7 +47,7 @@ export function Task({ task }: Props) {
 					<span>Complete</span>
 				</Button>
 			</div>
-			<div className="flex items-center gap-2">
+			<div className="flex items-center gap-2 p-2">
 				<DueDate
 					value={task.dueDate ? new Date(task.dueDate) : null}
 					onChange={async (value) => {

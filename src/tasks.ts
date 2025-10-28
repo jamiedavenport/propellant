@@ -75,6 +75,7 @@ export const listTasks = createServerFn({
 	.inputValidator(
 		type({
 			dueDate: "string.date?",
+			tags: "string[]?",
 		}),
 	)
 	.handler(async ({ context, data }) => {
@@ -87,7 +88,7 @@ export const listTasks = createServerFn({
 			where = and(where, eq(schema.task.dueDate, data.dueDate));
 		}
 
-		return await db.query.task.findMany({
+		const tasks = await db.query.task.findMany({
 			with: {
 				tags: {
 					with: {
@@ -98,6 +99,14 @@ export const listTasks = createServerFn({
 			where,
 			orderBy: [desc(schema.task.dueDate)],
 		});
+
+		if (data?.tags) {
+			return tasks.filter((task) =>
+				task.tags.some((tag) => data.tags?.includes(tag.tag.id)),
+			);
+		}
+
+		return tasks;
 	});
 
 export const completeTask = createServerFn({

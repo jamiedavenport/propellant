@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { type } from "arktype";
 import { isAuthenticated } from "./auth/middleware";
-import { asc, db, eq, schema } from "./db";
+import { and, asc, db, eq, schema } from "./db";
 
 export const createTag = createServerFn({
 	method: "POST",
@@ -36,4 +36,22 @@ export const listTags = createServerFn({
 			.from(schema.tag)
 			.where(eq(schema.tag.userId, context.user.id))
 			.orderBy(asc(schema.tag.name));
+	});
+
+export const getTag = createServerFn({
+	method: "GET",
+})
+	.middleware([isAuthenticated])
+	.inputValidator(
+		type({
+			id: "string",
+		}),
+	)
+	.handler(async ({ context, data }) => {
+		return await db.query.tag.findFirst({
+			where: and(
+				eq(schema.tag.id, data.id),
+				eq(schema.tag.userId, context.user.id),
+			),
+		});
 	});
