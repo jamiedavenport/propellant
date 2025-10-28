@@ -1,4 +1,4 @@
-import { CheckCircleIcon, CheckIcon } from "@phosphor-icons/react";
+import { CheckCircleIcon } from "@phosphor-icons/react";
 import { useRouter } from "@tanstack/react-router";
 import { completeTask } from "~/tasks";
 import { Button } from "./ui/button";

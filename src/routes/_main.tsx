@@ -1,6 +1,12 @@
-import { CalendarIcon, TrayIcon, WarningIcon } from "@phosphor-icons/react";
+import {
+	CalendarIcon,
+	TagIcon,
+	TrayIcon,
+	WarningIcon,
+} from "@phosphor-icons/react";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
+import { getIcon } from "~/components/icons";
 import { NewTag } from "~/components/tags/new";
 import {
 	Sidebar,
@@ -66,11 +72,22 @@ function RouteComponent() {
 						</SidebarGroupAction>
 						<SidebarGroupContent>
 							<SidebarMenu>
-								{tags.map((tag) => (
-									<SidebarMenuItem key={tag.id}>
-										<SidebarMenuButton>{tag.name}</SidebarMenuButton>
-									</SidebarMenuItem>
-								))}
+								{tags.map((tag) => {
+									const Icon = getIcon(tag.icon);
+
+									return (
+										<SidebarMenuItem key={tag.id}>
+											<SidebarMenuButton>
+												{Icon ? (
+													<Icon weight="duotone" />
+												) : (
+													<TagIcon weight="duotone" />
+												)}
+												<span>{tag.name}</span>
+											</SidebarMenuButton>
+										</SidebarMenuItem>
+									);
+								})}
 							</SidebarMenu>
 						</SidebarGroupContent>
 					</SidebarGroup>

@@ -1,8 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { type } from "arktype";
-import { desc, eq } from "drizzle-orm";
 import { isAuthenticated } from "./auth/middleware";
-import { db, schema } from "./db";
+import { asc, db, eq, schema } from "./db";
 
 export const createTag = createServerFn({
 	method: "POST",
@@ -10,6 +9,7 @@ export const createTag = createServerFn({
 	.inputValidator(
 		type({
 			name: "string",
+			icon: "string",
 		}),
 	)
 	.middleware([isAuthenticated])
@@ -20,7 +20,7 @@ export const createTag = createServerFn({
 				id: crypto.randomUUID(),
 
 				name: data.name,
-
+				icon: data.icon,
 				userId: context.user.id,
 			})
 			.returning();
@@ -35,5 +35,5 @@ export const listTags = createServerFn({
 			.select()
 			.from(schema.tag)
 			.where(eq(schema.tag.userId, context.user.id))
-			.orderBy(desc(schema.tag.createdAt));
+			.orderBy(asc(schema.tag.name));
 	});

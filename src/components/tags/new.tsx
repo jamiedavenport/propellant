@@ -3,6 +3,7 @@ import { type } from "arktype";
 import { type ReactNode, useState } from "react";
 import { createTag } from "~/tags";
 import { useAppForm } from "../form";
+import { Icons } from "../icons";
 import { Button } from "../ui/button";
 import {
 	Dialog,
@@ -13,11 +14,11 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "../ui/dialog";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+import { Field, FieldContent, FieldLabel } from "../ui/field";
 
 const formSchema = type({
 	name: "string",
+	icon: "string",
 });
 
 type Props = {
@@ -30,6 +31,7 @@ export function NewTag({ children }: Props) {
 	const form = useAppForm({
 		defaultValues: {
 			name: "",
+			icon: "",
 		},
 		validators: {
 			onSubmit: formSchema,
@@ -38,6 +40,7 @@ export function NewTag({ children }: Props) {
 			await createTag({
 				data: {
 					name: value.name,
+					icon: value.icon,
 				},
 			});
 
@@ -62,24 +65,26 @@ export function NewTag({ children }: Props) {
 						e.preventDefault();
 						form.handleSubmit();
 					}}
+					className="flex flex-col gap-4"
 				>
-					<div className="grid gap-4 py-4">
-						<div className="grid gap-2">
-							<Label htmlFor="name">Name</Label>
-							<form.AppField
-								name="name"
-								children={(field) => (
-									<Input
-										id="name"
-										placeholder="Enter tag name"
+					<form.AppField
+						name="name"
+						children={(field) => <field.TextField label="Name" type="text" />}
+					/>
+					<form.AppField
+						name="icon"
+						children={(field) => (
+							<Field>
+								<FieldLabel>Icon</FieldLabel>
+								<FieldContent>
+									<Icons
 										value={field.state.value}
-										onChange={(e) => field.handleChange(e.target.value)}
-										onBlur={field.handleBlur}
+										onChange={(value) => field.handleChange(value)}
 									/>
-								)}
-							/>
-						</div>
-					</div>
+								</FieldContent>
+							</Field>
+						)}
+					/>
 					<DialogFooter>
 						<Button type="submit">Create Tag</Button>
 					</DialogFooter>

@@ -19,6 +19,7 @@ export const tag = pgTable("tag", {
 	createdAt: timestamp().defaultNow().notNull(),
 
 	name: text().notNull(),
+	icon: text().notNull(),
 
 	userId: text()
 		.references(() => user.id, { onDelete: "cascade" })
