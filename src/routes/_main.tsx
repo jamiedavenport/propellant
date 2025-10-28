@@ -4,7 +4,7 @@ import {
 	TrayIcon,
 	WarningIcon,
 } from "@phosphor-icons/react";
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
 import { getIcon } from "~/components/icons";
 import { NewTag } from "~/components/tags/new";
@@ -43,15 +43,19 @@ function RouteComponent() {
 						<SidebarGroupContent>
 							<SidebarMenu>
 								<SidebarMenuItem>
-									<SidebarMenuButton>
-										<TrayIcon weight="duotone" />
-										<span>Inbox</span>
+									<SidebarMenuButton asChild>
+										<Link to="/inbox">
+											<TrayIcon weight="duotone" />
+											<span>Inbox</span>
+										</Link>
 									</SidebarMenuButton>
 								</SidebarMenuItem>
 								<SidebarMenuItem>
-									<SidebarMenuButton>
-										<CalendarIcon weight="duotone" />
-										<span>Today</span>
+									<SidebarMenuButton asChild>
+										<Link to="/today">
+											<CalendarIcon weight="duotone" />
+											<span>Today</span>
+										</Link>
 									</SidebarMenuButton>
 								</SidebarMenuItem>
 								<SidebarMenuItem>

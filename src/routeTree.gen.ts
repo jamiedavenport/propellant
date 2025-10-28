@@ -14,6 +14,7 @@ import { Route as MainRouteImport } from './routes/_main'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SignUpRouteImport } from './routes/sign/up'
 import { Route as SignInRouteImport } from './routes/sign/in'
+import { Route as MainTodayRouteImport } from './routes/_main/today'
 import { Route as MainInboxRouteImport } from './routes/_main/inbox'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
 import { Route as MainTagsTagIdRouteImport } from './routes/_main/tags.$tagId'
@@ -42,6 +43,11 @@ const SignInRoute = SignInRouteImport.update({
   path: '/in',
   getParentRoute: () => SignRoute,
 } as any)
+const MainTodayRoute = MainTodayRouteImport.update({
+  id: '/today',
+  path: '/today',
+  getParentRoute: () => MainRoute,
+} as any)
 const MainInboxRoute = MainInboxRouteImport.update({
   id: '/inbox',
   path: '/inbox',
@@ -62,6 +68,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/sign': typeof SignRouteWithChildren
   '/inbox': typeof MainInboxRoute
+  '/today': typeof MainTodayRoute
   '/sign/in': typeof SignInRoute
   '/sign/up': typeof SignUpRoute
   '/tags/$tagId': typeof MainTagsTagIdRoute
@@ -71,6 +78,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/sign': typeof SignRouteWithChildren
   '/inbox': typeof MainInboxRoute
+  '/today': typeof MainTodayRoute
   '/sign/in': typeof SignInRoute
   '/sign/up': typeof SignUpRoute
   '/tags/$tagId': typeof MainTagsTagIdRoute
@@ -82,6 +90,7 @@ export interface FileRoutesById {
   '/_main': typeof MainRouteWithChildren
   '/sign': typeof SignRouteWithChildren
   '/_main/inbox': typeof MainInboxRoute
+  '/_main/today': typeof MainTodayRoute
   '/sign/in': typeof SignInRoute
   '/sign/up': typeof SignUpRoute
   '/_main/tags/$tagId': typeof MainTagsTagIdRoute
@@ -93,6 +102,7 @@ export interface FileRouteTypes {
     | '/'
     | '/sign'
     | '/inbox'
+    | '/today'
     | '/sign/in'
     | '/sign/up'
     | '/tags/$tagId'
@@ -102,6 +112,7 @@ export interface FileRouteTypes {
     | '/'
     | '/sign'
     | '/inbox'
+    | '/today'
     | '/sign/in'
     | '/sign/up'
     | '/tags/$tagId'
@@ -112,6 +123,7 @@ export interface FileRouteTypes {
     | '/_main'
     | '/sign'
     | '/_main/inbox'
+    | '/_main/today'
     | '/sign/in'
     | '/sign/up'
     | '/_main/tags/$tagId'
@@ -162,6 +174,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignInRouteImport
       parentRoute: typeof SignRoute
     }
+    '/_main/today': {
+      id: '/_main/today'
+      path: '/today'
+      fullPath: '/today'
+      preLoaderRoute: typeof MainTodayRouteImport
+      parentRoute: typeof MainRoute
+    }
     '/_main/inbox': {
       id: '/_main/inbox'
       path: '/inbox'
@@ -188,11 +207,13 @@ declare module '@tanstack/react-router' {
 
 interface MainRouteChildren {
   MainInboxRoute: typeof MainInboxRoute
+  MainTodayRoute: typeof MainTodayRoute
   MainTagsTagIdRoute: typeof MainTagsTagIdRoute
 }
 
 const MainRouteChildren: MainRouteChildren = {
   MainInboxRoute: MainInboxRoute,
+  MainTodayRoute: MainTodayRoute,
   MainTagsTagIdRoute: MainTagsTagIdRoute,
 }
 

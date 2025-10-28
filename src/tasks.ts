@@ -72,7 +72,21 @@ export const listTasks = createServerFn({
 	method: "GET",
 })
 	.middleware([isAuthenticated])
-	.handler(async ({ context }) => {
+	.inputValidator(
+		type({
+			dueDate: "string.date?",
+		}),
+	)
+	.handler(async ({ context, data }) => {
+		let where = and(
+			eq(schema.task.userId, context.user.id),
+			isNull(schema.task.completedAt),
+		);
+
+		if (data?.dueDate) {
+			where = and(where, eq(schema.task.dueDate, data.dueDate));
+		}
+
 		return await db.query.task.findMany({
 			with: {
 				tags: {
@@ -81,10 +95,7 @@ export const listTasks = createServerFn({
 					},
 				},
 			},
-			where: and(
-				eq(schema.task.userId, context.user.id),
-				isNull(schema.task.completedAt),
-			),
+			where,
 			orderBy: [desc(schema.task.dueDate)],
 		});
 	});

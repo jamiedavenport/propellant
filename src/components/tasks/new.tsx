@@ -18,12 +18,16 @@ const formSchema = type({
 	tags: "string[]",
 });
 
-export function NewTask() {
+type Props = {
+	dueDate?: Date | null;
+};
+
+export function NewTask(props: Props) {
 	const router = useRouter();
 	const form = useAppForm({
 		defaultValues: {
 			content: "",
-			dueDate: null,
+			dueDate: props.dueDate ? props.dueDate.toISOString() : null,
 			tags: [],
 		} as {
 			content: string;
