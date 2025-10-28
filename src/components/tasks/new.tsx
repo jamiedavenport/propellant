@@ -1,6 +1,10 @@
+import { MagicWandIcon } from "@phosphor-icons/react";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import { type } from "arktype";
 import { ArrowUpIcon } from "lucide-react";
+import { useState } from "react";
+import { generateTask } from "~/ai";
 import { createTask } from "~/tasks";
 import { useAppForm } from "../form";
 import {
@@ -9,6 +13,7 @@ import {
 	InputGroupButton,
 	InputGroupInput,
 } from "../ui/input-group";
+import { Spinner } from "../ui/spinner";
 import { DueDate } from "./due-date";
 import { Tags } from "./tags";
 
@@ -24,6 +29,7 @@ type Props = {
 };
 
 export function NewTask(props: Props) {
+	const [isGenerating, setIsGenerating] = useState(false);
 	const router = useRouter();
 	const form = useAppForm({
 		defaultValues: {
@@ -52,6 +58,19 @@ export function NewTask(props: Props) {
 			router.invalidate();
 		},
 	});
+
+	const handleMagic = async () => {
+		setIsGenerating(true);
+		const response = await generateTask({
+			data: {
+				content: form.getFieldValue("content"),
+			},
+		});
+
+		form.setFieldValue("content", response.content);
+		form.setFieldValue("dueDate", response.dueDate);
+		setIsGenerating(false);
+	};
 
 	return (
 		<form
@@ -96,9 +115,20 @@ export function NewTask(props: Props) {
 					/>
 
 					<InputGroupButton
+						type="button"
+						variant="ghost"
+						size="icon-xs"
+						className="ml-auto rounded-full"
+						onClick={handleMagic}
+						disabled={isGenerating}
+					>
+						{isGenerating ? <Spinner /> : <MagicWandIcon />}
+						<span className="sr-only">Use AI</span>
+					</InputGroupButton>
+					<InputGroupButton
 						type="submit"
 						variant="default"
-						className="rounded-full ml-auto"
+						className="rounded-full"
 						size="icon-xs"
 						// disabled
 					>
