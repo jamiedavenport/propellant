@@ -1,6 +1,7 @@
 import { CalendarIcon, TrayIcon, WarningIcon } from "@phosphor-icons/react";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
+import { NewTag } from "~/components/tags/new";
 import {
 	Sidebar,
 	SidebarContent,
@@ -14,12 +15,19 @@ import {
 	SidebarMenuItem,
 	SidebarProvider,
 } from "~/components/ui/sidebar";
+import { listTags } from "~/tags";
 
 export const Route = createFileRoute("/_main")({
 	component: RouteComponent,
+	loader: async () => {
+		return {
+			tags: await listTags(),
+		};
+	},
 });
 
 function RouteComponent() {
+	const { tags } = Route.useLoaderData();
 	return (
 		<SidebarProvider>
 			<Sidebar>
@@ -52,22 +60,17 @@ function RouteComponent() {
 					<SidebarGroup>
 						<SidebarGroupLabel>Tags</SidebarGroupLabel>
 						<SidebarGroupAction>
-							<PlusIcon />
+							<NewTag>
+								<PlusIcon />
+							</NewTag>
 						</SidebarGroupAction>
 						<SidebarGroupContent>
 							<SidebarMenu>
-								<SidebarMenuItem>
-									<SidebarMenuButton>Tag 1</SidebarMenuButton>
-								</SidebarMenuItem>
-								<SidebarMenuItem>
-									<SidebarMenuButton>Important</SidebarMenuButton>
-								</SidebarMenuItem>
-								<SidebarMenuItem>
-									<SidebarMenuButton>Urgent</SidebarMenuButton>
-								</SidebarMenuItem>
-								<SidebarMenuItem>
-									<SidebarMenuButton>Meeting</SidebarMenuButton>
-								</SidebarMenuItem>
+								{tags.map((tag) => (
+									<SidebarMenuItem key={tag.id}>
+										<SidebarMenuButton>{tag.name}</SidebarMenuButton>
+									</SidebarMenuItem>
+								))}
 							</SidebarMenu>
 						</SidebarGroupContent>
 					</SidebarGroup>

@@ -16,6 +16,7 @@ import { Route as SignUpRouteImport } from './routes/sign/up'
 import { Route as SignInRouteImport } from './routes/sign/in'
 import { Route as MainInboxRouteImport } from './routes/_main/inbox'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
+import { Route as MainTagsTagIdRouteImport } from './routes/_main/tags.$tagId'
 
 const SignRoute = SignRouteImport.update({
   id: '/sign',
@@ -51,6 +52,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MainTagsTagIdRoute = MainTagsTagIdRouteImport.update({
+  id: '/tags/$tagId',
+  path: '/tags/$tagId',
+  getParentRoute: () => MainRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/inbox': typeof MainInboxRoute
   '/sign/in': typeof SignInRoute
   '/sign/up': typeof SignUpRoute
+  '/tags/$tagId': typeof MainTagsTagIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
@@ -66,6 +73,7 @@ export interface FileRoutesByTo {
   '/inbox': typeof MainInboxRoute
   '/sign/in': typeof SignInRoute
   '/sign/up': typeof SignUpRoute
+  '/tags/$tagId': typeof MainTagsTagIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
@@ -76,13 +84,28 @@ export interface FileRoutesById {
   '/_main/inbox': typeof MainInboxRoute
   '/sign/in': typeof SignInRoute
   '/sign/up': typeof SignUpRoute
+  '/_main/tags/$tagId': typeof MainTagsTagIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/sign' | '/inbox' | '/sign/in' | '/sign/up' | '/api/auth/$'
+  fullPaths:
+    | '/'
+    | '/sign'
+    | '/inbox'
+    | '/sign/in'
+    | '/sign/up'
+    | '/tags/$tagId'
+    | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/sign' | '/inbox' | '/sign/in' | '/sign/up' | '/api/auth/$'
+  to:
+    | '/'
+    | '/sign'
+    | '/inbox'
+    | '/sign/in'
+    | '/sign/up'
+    | '/tags/$tagId'
+    | '/api/auth/$'
   id:
     | '__root__'
     | '/'
@@ -91,6 +114,7 @@ export interface FileRouteTypes {
     | '/_main/inbox'
     | '/sign/in'
     | '/sign/up'
+    | '/_main/tags/$tagId'
     | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
@@ -152,15 +176,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_main/tags/$tagId': {
+      id: '/_main/tags/$tagId'
+      path: '/tags/$tagId'
+      fullPath: '/tags/$tagId'
+      preLoaderRoute: typeof MainTagsTagIdRouteImport
+      parentRoute: typeof MainRoute
+    }
   }
 }
 
 interface MainRouteChildren {
   MainInboxRoute: typeof MainInboxRoute
+  MainTagsTagIdRoute: typeof MainTagsTagIdRoute
 }
 
 const MainRouteChildren: MainRouteChildren = {
   MainInboxRoute: MainInboxRoute,
+  MainTagsTagIdRoute: MainTagsTagIdRoute,
 }
 
 const MainRouteWithChildren = MainRoute._addFileChildren(MainRouteChildren)

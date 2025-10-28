@@ -14,4 +14,15 @@ export const task = pgTable("task", {
 		.notNull(),
 });
 
+export const tag = pgTable("tag", {
+	id: text().primaryKey(),
+	createdAt: timestamp().defaultNow().notNull(),
+
+	name: text().notNull(),
+
+	userId: text()
+		.references(() => user.id, { onDelete: "cascade" })
+		.notNull(),
+});
+
 export * from "./auth-schema";
