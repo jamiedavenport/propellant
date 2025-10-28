@@ -1,6 +1,6 @@
 # Propellant
 
-## Getting Started
+## Getting Started
 
 ```sh
 # Install dependencies
