@@ -1,8 +1,7 @@
 import { CheckIcon, HashIcon } from "@phosphor-icons/react";
-import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { getIcon } from "~/components/icons";
-import { listTags } from "~/tags";
+import { useTags } from "~/context/tags";
 import { NewTag } from "../tags/new";
 import {
 	Command,
@@ -22,13 +21,9 @@ type Props = {
 
 export function Tags({ value, onChange }: Props) {
 	const [open, setOpen] = useState(false);
-	const tagsQuery = useQuery({
-		queryKey: ["tags"],
-		queryFn: () => listTags(),
-	});
+	const tags = useTags();
 
-	const selectedTags =
-		tagsQuery.data?.filter((tag) => value.includes(tag.id)) || [];
+	const selectedTags = tags.filter((tag) => value.includes(tag.id)) || [];
 
 	const toggleTag = (tagId: string) => {
 		const newValue = value.includes(tagId)
@@ -72,7 +67,7 @@ export function Tags({ value, onChange }: Props) {
 					<CommandList>
 						<CommandEmpty>No tags found.</CommandEmpty>
 						<CommandGroup>
-							{tagsQuery.data?.map((tag) => {
+							{tags.map((tag) => {
 								const Icon = getIcon(tag.icon);
 								const isSelected = value.includes(tag.id);
 

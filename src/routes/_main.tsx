@@ -21,6 +21,7 @@ import {
 	SidebarMenuItem,
 	SidebarProvider,
 } from "~/components/ui/sidebar";
+import { TagsProvider } from "~/context/tags";
 import { listTags } from "~/tags";
 
 export const Route = createFileRoute("/_main")({
@@ -34,72 +35,75 @@ export const Route = createFileRoute("/_main")({
 
 function RouteComponent() {
 	const { tags } = Route.useLoaderData();
-	return (
-		<SidebarProvider>
-			<Sidebar>
-				<SidebarContent>
-					<SidebarGroup>
-						{/* <SidebarGroupLabel>Unlabeled</SidebarGroupLabel> */}
-						<SidebarGroupContent>
-							<SidebarMenu>
-								<SidebarMenuItem>
-									<SidebarMenuButton asChild>
-										<Link to="/inbox">
-											<TrayIcon weight="duotone" />
-											<span>Inbox</span>
-										</Link>
-									</SidebarMenuButton>
-								</SidebarMenuItem>
-								<SidebarMenuItem>
-									<SidebarMenuButton asChild>
-										<Link to="/today">
-											<CalendarIcon weight="duotone" />
-											<span>Today</span>
-										</Link>
-									</SidebarMenuButton>
-								</SidebarMenuItem>
-								<SidebarMenuItem>
-									<SidebarMenuButton>
-										<WarningIcon weight="duotone" />
-										<span>Overdue</span>
-									</SidebarMenuButton>
-								</SidebarMenuItem>
-							</SidebarMenu>
-						</SidebarGroupContent>
-					</SidebarGroup>
-					<SidebarGroup>
-						<SidebarGroupLabel>Tags</SidebarGroupLabel>
-						<SidebarGroupAction>
-							<NewTag>
-								<PlusIcon />
-							</NewTag>
-						</SidebarGroupAction>
-						<SidebarGroupContent>
-							<SidebarMenu>
-								{tags.map((tag) => {
-									const Icon = getIcon(tag.icon);
 
-									return (
-										<SidebarMenuItem key={tag.id}>
-											<SidebarMenuButton>
-												{Icon ? (
-													<Icon weight="duotone" />
-												) : (
-													<TagIcon weight="duotone" />
-												)}
-												<span>{tag.name}</span>
-											</SidebarMenuButton>
-										</SidebarMenuItem>
-									);
-								})}
-							</SidebarMenu>
-						</SidebarGroupContent>
-					</SidebarGroup>
-				</SidebarContent>
-			</Sidebar>
-			<SidebarInset>
-				<Outlet />
-			</SidebarInset>
-		</SidebarProvider>
+	return (
+		<TagsProvider tags={tags}>
+			<SidebarProvider>
+				<Sidebar>
+					<SidebarContent>
+						<SidebarGroup>
+							{/* <SidebarGroupLabel>Unlabeled</SidebarGroupLabel> */}
+							<SidebarGroupContent>
+								<SidebarMenu>
+									<SidebarMenuItem>
+										<SidebarMenuButton asChild>
+											<Link to="/inbox">
+												<TrayIcon weight="duotone" />
+												<span>Inbox</span>
+											</Link>
+										</SidebarMenuButton>
+									</SidebarMenuItem>
+									<SidebarMenuItem>
+										<SidebarMenuButton asChild>
+											<Link to="/today">
+												<CalendarIcon weight="duotone" />
+												<span>Today</span>
+											</Link>
+										</SidebarMenuButton>
+									</SidebarMenuItem>
+									<SidebarMenuItem>
+										<SidebarMenuButton>
+											<WarningIcon weight="duotone" />
+											<span>Overdue</span>
+										</SidebarMenuButton>
+									</SidebarMenuItem>
+								</SidebarMenu>
+							</SidebarGroupContent>
+						</SidebarGroup>
+						<SidebarGroup>
+							<SidebarGroupLabel>Tags</SidebarGroupLabel>
+							<SidebarGroupAction>
+								<NewTag>
+									<PlusIcon />
+								</NewTag>
+							</SidebarGroupAction>
+							<SidebarGroupContent>
+								<SidebarMenu>
+									{tags.map((tag) => {
+										const Icon = getIcon(tag.icon);
+
+										return (
+											<SidebarMenuItem key={tag.id}>
+												<SidebarMenuButton>
+													{Icon ? (
+														<Icon weight="duotone" />
+													) : (
+														<TagIcon weight="duotone" />
+													)}
+													<span>{tag.name}</span>
+												</SidebarMenuButton>
+											</SidebarMenuItem>
+										);
+									})}
+								</SidebarMenu>
+							</SidebarGroupContent>
+						</SidebarGroup>
+					</SidebarContent>
+				</Sidebar>
+				<SidebarInset>
+					<Outlet />
+				</SidebarInset>
+			</SidebarProvider>
+		</TagsProvider>
 	);
 }
