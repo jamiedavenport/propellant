@@ -27,6 +27,31 @@ export const createTask = createServerFn({
 			.returning();
 	});
 
+export const updateTask = createServerFn({
+	method: "POST",
+})
+	.inputValidator(
+		type({
+			id: "string",
+			dueDate: "(string.date | null)?",
+		}),
+	)
+	.middleware([isAuthenticated])
+	.handler(async ({ data, context }) => {
+		return await db
+			.update(schema.task)
+			.set({
+				dueDate: data.dueDate,
+			})
+			.where(
+				and(
+					eq(schema.task.id, data.id),
+					eq(schema.task.userId, context.user.id),
+				),
+			)
+			.returning();
+	});
+
 export const listTasks = createServerFn({
 	method: "GET",
 })

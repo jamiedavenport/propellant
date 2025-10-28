@@ -1,17 +1,15 @@
-import { CalendarIcon } from "@phosphor-icons/react";
 import { useRouter } from "@tanstack/react-router";
 import { type } from "arktype";
 import { ArrowUpIcon } from "lucide-react";
 import { createTask } from "~/tasks";
 import { useAppForm } from "../form";
-import { Calendar } from "../ui/calendar";
 import {
 	InputGroup,
 	InputGroupAddon,
 	InputGroupButton,
 	InputGroupInput,
 } from "../ui/input-group";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { DueDate } from "./due-date";
 
 const formSchema = type({
 	content: "string",
@@ -69,35 +67,12 @@ export function NewTask() {
 					<form.AppField
 						name="dueDate"
 						children={(field) => (
-							<Popover>
-								<PopoverTrigger asChild>
-									<InputGroupButton variant="ghost">
-										<CalendarIcon weight="fill" />
-										<span>
-											{field.state.value
-												? new Date(field.state.value).toLocaleDateString()
-												: "Due Date"}
-										</span>
-									</InputGroupButton>
-								</PopoverTrigger>
-								<PopoverContent>
-									<Calendar
-										mode="single"
-										selected={
-											field.state.value
-												? new Date(field.state.value)
-												: undefined
-										}
-										onSelect={(date) => {
-											if (date) {
-												field.handleChange(date.toISOString());
-											} else {
-												field.handleChange(null);
-											}
-										}}
-									/>
-								</PopoverContent>
-							</Popover>
+							<DueDate
+								value={field.state.value ? new Date(field.state.value) : null}
+								onChange={(value) =>
+									field.handleChange(value ? value.toISOString() : null)
+								}
+							/>
 						)}
 					/>
 
