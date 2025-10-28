@@ -1,6 +1,7 @@
-// import { completeTask } from "~/tasks";
+import { CheckCircleIcon, CheckIcon } from "@phosphor-icons/react";
+import { useRouter } from "@tanstack/react-router";
+import { completeTask } from "~/tasks";
 import { Button } from "./ui/button";
-import { Card, CardContent } from "./ui/card";
 
 type TaskData = {
 	id: string;
@@ -14,31 +15,24 @@ type Props = {
 };
 
 export function Task({ task }: Props) {
-	const isCompleted = task.completedAt !== null;
-
+	const router = useRouter();
 	const handleComplete = async () => {
-		// await completeTask({
-		// 	data: {
-		// 		id: task.id,
-		// 	},
-		// });
+		await completeTask({
+			data: {
+				id: task.id,
+			},
+		});
+
+		router.invalidate();
 	};
 
 	return (
-		<Card className="w-full">
-			<CardContent className="flex items-center justify-between p-4">
-				<span
-					className={`flex-1 ${isCompleted ? "line-through text-muted-foreground" : ""}`}
-				>
-					{task.content}
-				</span>
-				<span>{task.dueDate}</span>
-				{!isCompleted && (
-					<Button variant="outline" size="sm" onClick={handleComplete}>
-						Complete
-					</Button>
-				)}
-			</CardContent>
-		</Card>
+		<div className="flex items-center justify-between">
+			<span>{task.content}</span>
+			<Button type="button" variant="ghost" size="sm" onClick={handleComplete}>
+				<CheckCircleIcon weight="fill" />
+				<span>Complete</span>
+			</Button>
+		</div>
 	);
 }

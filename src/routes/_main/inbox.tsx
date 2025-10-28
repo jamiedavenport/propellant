@@ -11,7 +11,7 @@ export const Route = createFileRoute("/_main/inbox")({
 		}
 
 		return {
-			tasks: await listTasks({ data: {} }),
+			tasks: await listTasks(),
 		};
 	},
 });
@@ -21,7 +21,7 @@ function RouteComponent() {
 	return (
 		<div className="p-10 space-y-10">
 			<NewTask />
-			<div>
+			<div className="space-y-2">
 				{tasks.map((task) => (
 					<Task key={task.id} task={task} />
 				))}
