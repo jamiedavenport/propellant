@@ -123,59 +123,61 @@ export const completeTask = createServerFn({
 	)
 	.middleware([isAuthenticated])
 	.handler(async ({ data, context }) => {
-		const task = await db.query.task.findFirst({
-			where: and(
-				eq(schema.task.id, data.id),
-				eq(schema.task.userId, context.user.id),
-			),
-			with: {
-				tags: true,
-			},
-		});
-
-		if (!task) {
-			throw new Error("Task not found");
-		}
-
-		await db
-			.update(schema.task)
-			.set({
-				completedAt: new Date(),
-			})
-			.where(
-				and(
+		return await db.transaction(async (tx) => {
+			const task = await tx.query.task.findFirst({
+				where: and(
 					eq(schema.task.id, data.id),
 					eq(schema.task.userId, context.user.id),
 				),
-			);
+				with: {
+					tags: true,
+				},
+			});
 
-		if (task.repeat !== "never") {
-			const nextDate = getNextDate(dayjs(task.dueDate), task.repeat);
+			if (!task) {
+				throw new Error("Task not found");
+			}
 
-			const [created] = await db
-				.insert(schema.task)
-				.values({
-					id: crypto.randomUUID(),
-					content: task.content,
-					dueDate: nextDate.format("YYYY-MM-DD"),
-					repeat: task.repeat,
-					userId: task.userId,
+			await tx
+				.update(schema.task)
+				.set({
+					completedAt: new Date(),
 				})
-				.returning();
-
-			if (!created) {
-				throw new Error("Task not created");
-			}
-
-			if (task.tags.length > 0) {
-				await db.insert(schema.tags).values(
-					task.tags.map((tag) => ({
-						taskId: created.id,
-						tagId: tag.tagId,
-					})),
+				.where(
+					and(
+						eq(schema.task.id, data.id),
+						eq(schema.task.userId, context.user.id),
+					),
 				);
-			}
-		}
 
-		return task;
+			if (task.repeat !== "never") {
+				const nextDate = getNextDate(dayjs(task.dueDate), task.repeat);
+
+				const [created] = await tx
+					.insert(schema.task)
+					.values({
+						id: crypto.randomUUID(),
+						content: task.content,
+						dueDate: nextDate.format("YYYY-MM-DD"),
+						repeat: task.repeat,
+						userId: task.userId,
+					})
+					.returning();
+
+				if (!created) {
+					throw new Error("Task not created");
+				}
+
+				if (task.tags.length > 0) {
+					await tx.insert(schema.tags).values(
+						task.tags.map((tag) => ({
+							taskId: created.id,
+							tagId: tag.tagId,
+						})),
+					);
+				}
+			}
+
+			return task;
+		});
 	});
