@@ -181,3 +181,24 @@ export const completeTask = createServerFn({
 			return task;
 		});
 	});
+
+export const deleteTask = createServerFn({
+	method: "POST",
+})
+	.inputValidator(
+		type({
+			id: "string",
+		}),
+	)
+	.middleware([isAuthenticated])
+	.handler(async ({ data, context }) => {
+		return await db
+			.delete(schema.task)
+			.where(
+				and(
+					eq(schema.task.id, data.id),
+					eq(schema.task.userId, context.user.id),
+				),
+			)
+			.returning();
+	});

@@ -1,7 +1,7 @@
-import { CheckCircleIcon } from "@phosphor-icons/react";
+import { CheckCircleIcon, TrashIcon } from "@phosphor-icons/react";
 import { useRouter } from "@tanstack/react-router";
 import type { Repeat } from "~/repeat";
-import { completeTask, updateTask } from "~/tasks";
+import { completeTask, deleteTask, updateTask } from "~/tasks";
 import { DueDate } from "./tasks/due-date";
 import { RepeatSelect } from "./tasks/repeat";
 import { Tags } from "./tasks/tags";
@@ -37,19 +37,40 @@ export function Task({ task }: Props) {
 		router.invalidate();
 	};
 
+	const handleDelete = async () => {
+		await deleteTask({
+			data: {
+				id: task.id,
+			},
+		});
+
+		router.invalidate();
+	};
+
 	return (
 		<div className="border rounded-lg overflow-hidden shadow-xs">
 			<div className="flex items-center justify-between px-2 py-1 border-b">
 				<span>{task.content}</span>
-				<Button
-					type="button"
-					variant="ghost"
-					size="sm"
-					onClick={handleComplete}
-				>
-					<CheckCircleIcon weight="fill" />
-					<span>Complete</span>
-				</Button>
+				<div className="flex items-center gap-2">
+					<Button
+						type="button"
+						variant="ghost"
+						size="sm"
+						onClick={handleComplete}
+					>
+						<CheckCircleIcon weight="fill" />
+						<span>Complete</span>
+					</Button>
+					<Button
+						type="button"
+						variant="ghost"
+						size="sm"
+						onClick={handleDelete}
+					>
+						<TrashIcon weight="fill" />
+						<span>Delete</span>
+					</Button>
+				</div>
 			</div>
 			<div className="flex items-center gap-2 p-2">
 				<DueDate
