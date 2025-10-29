@@ -1,7 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
 import { type } from "arktype";
 import { isAuthenticated } from "./auth/middleware";
+import { dayjs } from "./dayjs";
 import { and, db, desc, eq, isNull, schema } from "./db";
+import { getNextDate, repeat } from "./repeat";
 
 export const createTask = createServerFn({
 	method: "POST",
@@ -11,6 +13,7 @@ export const createTask = createServerFn({
 			content: "string",
 			dueDate: "string.date | null",
 			tags: "string[]",
+			repeat,
 		}),
 	)
 	.middleware([isAuthenticated])
@@ -22,6 +25,7 @@ export const createTask = createServerFn({
 
 				content: data.content,
 				dueDate: data.dueDate,
+				repeat: data.repeat,
 
 				userId: context.user.id,
 			})
@@ -119,7 +123,21 @@ export const completeTask = createServerFn({
 	)
 	.middleware([isAuthenticated])
 	.handler(async ({ data, context }) => {
-		return await db
+		const task = await db.query.task.findFirst({
+			where: and(
+				eq(schema.task.id, data.id),
+				eq(schema.task.userId, context.user.id),
+			),
+			with: {
+				tags: true,
+			},
+		});
+
+		if (!task) {
+			throw new Error("Task not found");
+		}
+
+		await db
 			.update(schema.task)
 			.set({
 				completedAt: new Date(),
@@ -129,6 +147,35 @@ export const completeTask = createServerFn({
 					eq(schema.task.id, data.id),
 					eq(schema.task.userId, context.user.id),
 				),
-			)
-			.returning();
+			);
+
+		if (task.repeat !== "never") {
+			const nextDate = getNextDate(dayjs(task.dueDate), task.repeat);
+
+			const [created] = await db
+				.insert(schema.task)
+				.values({
+					id: crypto.randomUUID(),
+					content: task.content,
+					dueDate: nextDate.format("YYYY-MM-DD"),
+					repeat: task.repeat,
+					userId: task.userId,
+				})
+				.returning();
+
+			if (!created) {
+				throw new Error("Task not created");
+			}
+
+			if (task.tags.length > 0) {
+				await db.insert(schema.tags).values(
+					task.tags.map((tag) => ({
+						taskId: created.id,
+						tagId: tag.tagId,
+					})),
+				);
+			}
+		}
+
+		return task;
 	});

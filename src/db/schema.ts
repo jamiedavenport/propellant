@@ -6,6 +6,7 @@ import {
 	text,
 	timestamp,
 } from "drizzle-orm/pg-core";
+import type { Repeat } from "~/repeat";
 import { user } from "./auth-schema";
 
 export const task = pgTable("task", {
@@ -15,6 +16,7 @@ export const task = pgTable("task", {
 	content: text().notNull(),
 	dueDate: date(),
 	completedAt: timestamp(),
+	repeat: text().$type<Repeat>().default("never").notNull(),
 
 	userId: text()
 		.references(() => user.id, { onDelete: "cascade" })

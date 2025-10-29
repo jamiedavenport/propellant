@@ -1,12 +1,19 @@
-import { MagicWandIcon } from "@phosphor-icons/react";
+import { MagicWandIcon, RepeatIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import { type } from "arktype";
 import { ArrowUpIcon } from "lucide-react";
 import { useState } from "react";
 import { generateTask } from "~/ai";
+import { type Repeat, repeat } from "~/repeat";
 import { createTask } from "~/tasks";
 import { useAppForm } from "../form";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 import {
 	InputGroup,
 	InputGroupAddon,
@@ -15,12 +22,14 @@ import {
 } from "../ui/input-group";
 import { Spinner } from "../ui/spinner";
 import { DueDate } from "./due-date";
+import { RepeatSelect } from "./repeat";
 import { Tags } from "./tags";
 
 const formSchema = type({
 	content: "string",
 	dueDate: "string.date | null",
 	tags: "string[]",
+	repeat,
 });
 
 type Props = {
@@ -36,10 +45,12 @@ export function NewTask(props: Props) {
 			content: "",
 			dueDate: props.dueDate ? props.dueDate.toISOString() : null,
 			tags: props.tags ?? [],
+			repeat: "never",
 		} as {
 			content: string;
 			dueDate: string | null;
 			tags: string[];
+			repeat: Repeat;
 		},
 		validators: {
 			onSubmit: formSchema,
@@ -50,6 +61,7 @@ export function NewTask(props: Props) {
 					content: value.content,
 					dueDate: value.dueDate,
 					tags: value.tags,
+					repeat: value.repeat,
 				},
 			});
 
@@ -108,6 +120,15 @@ export function NewTask(props: Props) {
 						name="tags"
 						children={(field) => (
 							<Tags
+								value={field.state.value}
+								onChange={(value) => field.handleChange(value)}
+							/>
+						)}
+					/>
+					<form.Field
+						name="repeat"
+						children={(field) => (
+							<RepeatSelect
 								value={field.state.value}
 								onChange={(value) => field.handleChange(value)}
 							/>

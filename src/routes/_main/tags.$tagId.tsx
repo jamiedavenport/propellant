@@ -18,7 +18,7 @@ export const Route = createFileRoute("/_main/tags/$tagId")({
 		return {
 			tag,
 			tasks: await listTasks({
-				data: { dueDate: new Date().toISOString(), tags: [params.tagId] },
+				data: { tags: [params.tagId] },
 			}),
 		};
 	},

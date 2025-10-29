@@ -1,10 +1,13 @@
 import { CheckCircleIcon } from "@phosphor-icons/react";
 import { useRouter } from "@tanstack/react-router";
+import type { Repeat } from "~/repeat";
 import { completeTask, updateTask } from "~/tasks";
 import { DueDate } from "./tasks/due-date";
+import { RepeatSelect } from "./tasks/repeat";
 import { Tags } from "./tasks/tags";
 import { Button } from "./ui/button";
 
+// todo
 type TaskData = {
 	id: string;
 	content: string;
@@ -15,6 +18,7 @@ type TaskData = {
 			id: string;
 		};
 	}[];
+	repeat: Repeat;
 };
 
 type Props = {
@@ -62,6 +66,13 @@ export function Task({ task }: Props) {
 				/>
 				<Tags
 					value={task.tags.map((tag) => tag.tag.id)}
+					onChange={(value) => {
+						// todo
+						// router.invalidate();
+					}}
+				/>
+				<RepeatSelect
+					value={task.repeat}
 					onChange={(value) => {
 						// todo
 						// router.invalidate();
