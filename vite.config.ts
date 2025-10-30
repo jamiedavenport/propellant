@@ -14,6 +14,9 @@ export default defineConfig({
 		tanstackStart(),
 		nitroV2Plugin({
 			compatibilityDate: "2025-10-30",
+			compressPublicAssets: {
+				brotli: true,
+			},
 		}),
 		viteReact(),
 		tailwindcss(),
