@@ -6,6 +6,7 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "vite build",
+		"start": "bun run dist/server/server.js",
 		"fmt": "biome format --write",
 		"lint": "biome lint --write",
 		"db:push": "drizzle-kit push",
