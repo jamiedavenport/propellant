@@ -2,7 +2,8 @@ import { createServerFn } from "@tanstack/react-start";
 import { type } from "arktype";
 import { isAuthenticated } from "./auth/middleware";
 import { dayjs } from "./dayjs";
-import { and, db, desc, eq, isNull, schema } from "./db";
+import { and, asc, db, desc, eq, isNull, schema, sql } from "./db";
+import { type Priority, priority } from "./priority";
 import { getNextDate, repeat } from "./repeat";
 
 export const createTask = createServerFn({
@@ -14,6 +15,7 @@ export const createTask = createServerFn({
 			dueDate: "string.date | null",
 			tags: "string[]",
 			repeat,
+			priority,
 		}),
 	)
 	.middleware([isAuthenticated])
@@ -26,6 +28,7 @@ export const createTask = createServerFn({
 				content: data.content,
 				dueDate: data.dueDate,
 				repeat: data.repeat,
+				priority: data.priority,
 
 				userId: context.user.id,
 			})
@@ -54,15 +57,24 @@ export const updateTask = createServerFn({
 		type({
 			id: "string",
 			dueDate: "(string.date | null)?",
+			priority: priority.optional(),
 		}),
 	)
 	.middleware([isAuthenticated])
 	.handler(async ({ data, context }) => {
+		const updateData: { dueDate?: string | null; priority?: Priority } = {};
+
+		if (data.dueDate !== undefined) {
+			updateData.dueDate = data.dueDate;
+		}
+
+		if (data.priority !== undefined) {
+			updateData.priority = data.priority;
+		}
+
 		return await db
 			.update(schema.task)
-			.set({
-				dueDate: data.dueDate,
-			})
+			.set(updateData)
 			.where(
 				and(
 					eq(schema.task.id, data.id),
@@ -101,7 +113,10 @@ export const listTasks = createServerFn({
 				},
 			},
 			where,
-			orderBy: [desc(schema.task.dueDate)],
+			orderBy: [
+				desc(schema.task.dueDate),
+				sql`array_position(array['high', 'medium', 'low', 'none'], ${schema.task.priority})`,
+			],
 		});
 
 		if (data?.tags) {
@@ -160,6 +175,7 @@ export const completeTask = createServerFn({
 						content: task.content,
 						dueDate: nextDate.format("YYYY-MM-DD"),
 						repeat: task.repeat,
+						priority: task.priority,
 						userId: task.userId,
 					})
 					.returning();

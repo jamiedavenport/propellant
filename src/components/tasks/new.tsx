@@ -1,19 +1,13 @@
-import { MagicWandIcon, RepeatIcon } from "@phosphor-icons/react";
-import { useMutation } from "@tanstack/react-query";
+import { MagicWandIcon } from "@phosphor-icons/react";
 import { useRouter } from "@tanstack/react-router";
 import { type } from "arktype";
 import { ArrowUpIcon } from "lucide-react";
 import { useState } from "react";
 import { generateTask } from "~/ai";
+import { type Priority, priority } from "~/priority";
 import { type Repeat, repeat } from "~/repeat";
 import { createTask } from "~/tasks";
 import { useAppForm } from "../form";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
 import {
 	InputGroup,
 	InputGroupAddon,
@@ -22,6 +16,7 @@ import {
 } from "../ui/input-group";
 import { Spinner } from "../ui/spinner";
 import { DueDate } from "./due-date";
+import { PrioritySelect } from "./priority";
 import { RepeatSelect } from "./repeat";
 import { Tags } from "./tags";
 
@@ -30,6 +25,7 @@ const formSchema = type({
 	dueDate: "string.date | null",
 	tags: "string[]",
 	repeat,
+	priority: priority,
 });
 
 type Props = {
@@ -46,12 +42,15 @@ export function NewTask(props: Props) {
 			dueDate: props.dueDate ? props.dueDate.toISOString() : null,
 			tags: props.tags ?? [],
 			repeat: "never",
+			priority: "none",
 		} as {
 			content: string;
 			dueDate: string | null;
 			tags: string[];
 			repeat: Repeat;
+			priority: Priority;
 		},
+
 		validators: {
 			onSubmit: formSchema,
 		},
@@ -62,6 +61,7 @@ export function NewTask(props: Props) {
 					dueDate: value.dueDate,
 					tags: value.tags,
 					repeat: value.repeat,
+					priority: value.priority,
 				},
 			});
 
@@ -129,6 +129,15 @@ export function NewTask(props: Props) {
 						name="repeat"
 						children={(field) => (
 							<RepeatSelect
+								value={field.state.value}
+								onChange={(value) => field.handleChange(value)}
+							/>
+						)}
+					/>
+					<form.Field
+						name="priority"
+						children={(field) => (
+							<PrioritySelect
 								value={field.state.value}
 								onChange={(value) => field.handleChange(value)}
 							/>

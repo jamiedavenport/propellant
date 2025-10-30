@@ -1,8 +1,10 @@
 import { CheckCircleIcon, TrashIcon } from "@phosphor-icons/react";
 import { useRouter } from "@tanstack/react-router";
+import type { Priority } from "~/priority";
 import type { Repeat } from "~/repeat";
 import { completeTask, deleteTask, updateTask } from "~/tasks";
 import { DueDate } from "./tasks/due-date";
+import { PrioritySelect } from "./tasks/priority";
 import { RepeatSelect } from "./tasks/repeat";
 import { Tags } from "./tasks/tags";
 import { Button } from "./ui/button";
@@ -19,6 +21,7 @@ type TaskData = {
 		};
 	}[];
 	repeat: Repeat;
+	priority: Priority;
 };
 
 type Props = {
@@ -80,6 +83,18 @@ export function Task({ task }: Props) {
 							data: {
 								id: task.id,
 								dueDate: value ? value.toISOString() : null,
+							},
+						});
+						router.invalidate();
+					}}
+				/>
+				<PrioritySelect
+					value={task.priority}
+					onChange={async (value) => {
+						await updateTask({
+							data: {
+								id: task.id,
+								priority: value,
 							},
 						});
 						router.invalidate();
