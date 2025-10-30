@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { type } from "arktype";
 import { isAuthenticated } from "./auth/middleware";
 import { dayjs } from "./dayjs";
-import { and, asc, db, desc, eq, isNull, schema, sql } from "./db";
+import { and, db, desc, eq, isNull, schema, sql } from "./db";
 import { type Priority, priority } from "./priority";
 import { getNextDate, repeat } from "./repeat";
 
@@ -115,7 +115,7 @@ export const listTasks = createServerFn({
 			where,
 			orderBy: [
 				desc(schema.task.dueDate),
-				sql`array_position(array['high', 'medium', 'low', 'none'], ${schema.task.priority})`,
+				sql`array_position(array['high', 'low', 'medium', 'none'], ${schema.task.priority})`,
 			],
 		});
 
