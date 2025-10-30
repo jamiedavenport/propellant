@@ -31,6 +31,17 @@ export const Route = createRootRoute({
 				rel: "stylesheet",
 				href: styles,
 			},
+			{
+				rel: "icon",
+				href: "/favicon.png",
+				sizes: "96x96",
+				type: "image/png",
+			},
+			{
+				rel: "icon",
+				href: "/favicon.svg",
+				type: "image/svg+xml",
+			},
 		],
 	}),
 	beforeLoad: async () => {
