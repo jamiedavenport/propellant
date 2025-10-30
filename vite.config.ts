@@ -17,6 +17,13 @@ export default defineConfig({
 			compressPublicAssets: {
 				brotli: true,
 			},
+			routeRules: {
+				"assets/**": {
+					cache: {
+						maxAge: 31536000, // 1 year
+					},
+				},
+			},
 		}),
 		viteReact(),
 		tailwindcss(),
