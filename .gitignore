@@ -38,3 +38,7 @@ data/
 
 # TanStack
 .tanstack
+
+# Nitro
+.nitro
+.output
