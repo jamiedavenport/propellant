@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as SignUpRouteImport } from './routes/sign/up'
 import { Route as SignInRouteImport } from './routes/sign/in'
 import { Route as MainTodayRouteImport } from './routes/_main/today'
+import { Route as MainOverdueRouteImport } from './routes/_main/overdue'
 import { Route as MainInboxRouteImport } from './routes/_main/inbox'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
 import { Route as MainTagsTagIdRouteImport } from './routes/_main/tags.$tagId'
@@ -48,6 +49,11 @@ const MainTodayRoute = MainTodayRouteImport.update({
   path: '/today',
   getParentRoute: () => MainRoute,
 } as any)
+const MainOverdueRoute = MainOverdueRouteImport.update({
+  id: '/overdue',
+  path: '/overdue',
+  getParentRoute: () => MainRoute,
+} as any)
 const MainInboxRoute = MainInboxRouteImport.update({
   id: '/inbox',
   path: '/inbox',
@@ -68,6 +74,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/sign': typeof SignRouteWithChildren
   '/inbox': typeof MainInboxRoute
+  '/overdue': typeof MainOverdueRoute
   '/today': typeof MainTodayRoute
   '/sign/in': typeof SignInRoute
   '/sign/up': typeof SignUpRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/sign': typeof SignRouteWithChildren
   '/inbox': typeof MainInboxRoute
+  '/overdue': typeof MainOverdueRoute
   '/today': typeof MainTodayRoute
   '/sign/in': typeof SignInRoute
   '/sign/up': typeof SignUpRoute
@@ -90,6 +98,7 @@ export interface FileRoutesById {
   '/_main': typeof MainRouteWithChildren
   '/sign': typeof SignRouteWithChildren
   '/_main/inbox': typeof MainInboxRoute
+  '/_main/overdue': typeof MainOverdueRoute
   '/_main/today': typeof MainTodayRoute
   '/sign/in': typeof SignInRoute
   '/sign/up': typeof SignUpRoute
@@ -102,6 +111,7 @@ export interface FileRouteTypes {
     | '/'
     | '/sign'
     | '/inbox'
+    | '/overdue'
     | '/today'
     | '/sign/in'
     | '/sign/up'
@@ -112,6 +122,7 @@ export interface FileRouteTypes {
     | '/'
     | '/sign'
     | '/inbox'
+    | '/overdue'
     | '/today'
     | '/sign/in'
     | '/sign/up'
@@ -123,6 +134,7 @@ export interface FileRouteTypes {
     | '/_main'
     | '/sign'
     | '/_main/inbox'
+    | '/_main/overdue'
     | '/_main/today'
     | '/sign/in'
     | '/sign/up'
@@ -181,6 +193,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainTodayRouteImport
       parentRoute: typeof MainRoute
     }
+    '/_main/overdue': {
+      id: '/_main/overdue'
+      path: '/overdue'
+      fullPath: '/overdue'
+      preLoaderRoute: typeof MainOverdueRouteImport
+      parentRoute: typeof MainRoute
+    }
     '/_main/inbox': {
       id: '/_main/inbox'
       path: '/inbox'
@@ -207,12 +226,14 @@ declare module '@tanstack/react-router' {
 
 interface MainRouteChildren {
   MainInboxRoute: typeof MainInboxRoute
+  MainOverdueRoute: typeof MainOverdueRoute
   MainTodayRoute: typeof MainTodayRoute
   MainTagsTagIdRoute: typeof MainTagsTagIdRoute
 }
 
 const MainRouteChildren: MainRouteChildren = {
   MainInboxRoute: MainInboxRoute,
+  MainOverdueRoute: MainOverdueRoute,
   MainTodayRoute: MainTodayRoute,
   MainTagsTagIdRoute: MainTagsTagIdRoute,
 }

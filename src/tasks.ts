@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { type } from "arktype";
 import { isAuthenticated } from "./auth/middleware";
 import { dayjs } from "./dayjs";
-import { and, db, desc, eq, isNull, schema, sql } from "./db";
+import { and, db, desc, eq, isNull, lt, schema, sql } from "./db";
 import { type Priority, priority } from "./priority";
 import { getNextDate, repeat } from "./repeat";
 
@@ -126,6 +126,31 @@ export const listTasks = createServerFn({
 		}
 
 		return tasks;
+	});
+
+export const listOverdueTasks = createServerFn({
+	method: "GET",
+})
+	.middleware([isAuthenticated])
+	.handler(async ({ context }) => {
+		return await db.query.task.findMany({
+			with: {
+				tags: {
+					with: {
+						tag: true,
+					},
+				},
+			},
+			where: and(
+				eq(schema.task.userId, context.user.id),
+				isNull(schema.task.completedAt),
+				lt(schema.task.dueDate, dayjs().format("YYYY-MM-DD")),
+			),
+			orderBy: [
+				desc(schema.task.dueDate),
+				sql`array_position(array['high', 'low', 'medium', 'none'], ${schema.task.priority})`,
+			],
+		});
 	});
 
 export const completeTask = createServerFn({

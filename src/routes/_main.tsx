@@ -62,9 +62,11 @@ function RouteComponent() {
 										</SidebarMenuButton>
 									</SidebarMenuItem>
 									<SidebarMenuItem>
-										<SidebarMenuButton>
-											<WarningIcon weight="duotone" />
-											<span>Overdue</span>
+										<SidebarMenuButton asChild>
+											<Link to="/overdue">
+												<WarningIcon weight="duotone" />
+												<span>Overdue</span>
+											</Link>
 										</SidebarMenuButton>
 									</SidebarMenuItem>
 								</SidebarMenu>
