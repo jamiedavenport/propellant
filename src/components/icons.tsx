@@ -25,6 +25,7 @@ import {
 	SunIcon,
 	TimerIcon,
 	TreeIcon,
+	UserIcon,
 	WarningIcon,
 	WrenchIcon,
 } from "@phosphor-icons/react";
@@ -68,7 +69,10 @@ export const icons = {
 	sun: SunIcon,
 	gear: GearIcon,
 	wrench: WrenchIcon,
+	user: UserIcon,
 };
+
+export type Icon = keyof typeof icons;
 
 export function getIcon(name: string) {
 	return icons[name as keyof typeof icons] ?? null;

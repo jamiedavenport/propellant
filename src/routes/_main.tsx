@@ -1,16 +1,25 @@
 import {
 	CalendarIcon,
+	SignOut,
+	SignOutIcon,
 	TagIcon,
 	TrayIcon,
 	WarningIcon,
 } from "@phosphor-icons/react";
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import {
+	createFileRoute,
+	Link,
+	Outlet,
+	useRouter,
+} from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
+import { auth } from "~/auth/client";
 import { getIcon } from "~/components/icons";
 import { NewTag } from "~/components/tags/new";
 import {
 	Sidebar,
 	SidebarContent,
+	SidebarFooter,
 	SidebarGroup,
 	SidebarGroupAction,
 	SidebarGroupContent,
@@ -34,6 +43,7 @@ export const Route = createFileRoute("/_main")({
 });
 
 function RouteComponent() {
+	const router = useRouter();
 	const { tags } = Route.useLoaderData();
 
 	return (
@@ -103,6 +113,17 @@ function RouteComponent() {
 							</SidebarGroupContent>
 						</SidebarGroup>
 					</SidebarContent>
+					<SidebarFooter>
+						<SidebarMenuButton
+							onClick={async () => {
+								await auth.signOut();
+								await router.navigate({ to: "/sign/in" });
+							}}
+						>
+							<SignOutIcon weight="duotone" />
+							<span>Sign Out</span>
+						</SidebarMenuButton>
+					</SidebarFooter>
 				</Sidebar>
 				<SidebarInset>
 					<Outlet />

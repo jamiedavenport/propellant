@@ -6,6 +6,7 @@ import {
 	text,
 	timestamp,
 } from "drizzle-orm/pg-core";
+import type { Icon } from "~/components/icons";
 import type { Priority } from "~/priority";
 import type { Repeat } from "~/repeat";
 import { user } from "./auth-schema";
@@ -34,7 +35,7 @@ export const tag = pgTable("tag", {
 	createdAt: timestamp().defaultNow().notNull(),
 
 	name: text().notNull(),
-	icon: text().notNull(),
+	icon: text().$type<Icon>().notNull(),
 
 	userId: text()
 		.references(() => user.id, { onDelete: "cascade" })
