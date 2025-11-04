@@ -1,4 +1,4 @@
-import { CheckCircleIcon, TrashIcon } from "@phosphor-icons/react";
+import { CheckCircleIcon, CheckIcon, TrashIcon } from "@phosphor-icons/react";
 import { useRouter } from "@tanstack/react-router";
 import type { Priority } from "~/priority";
 import type { Repeat } from "~/repeat";
@@ -52,28 +52,26 @@ export function Task({ task }: Props) {
 
 	return (
 		<div className="border rounded-lg overflow-hidden shadow-xs">
-			<div className="flex items-center justify-between px-2 py-1 border-b">
-				<span>{task.content}</span>
-				<div className="flex items-center gap-2">
-					<Button
-						type="button"
-						variant="ghost"
-						size="sm"
-						onClick={handleComplete}
-					>
-						<CheckCircleIcon weight="fill" />
-						<span>Complete</span>
-					</Button>
-					<Button
-						type="button"
-						variant="ghost"
-						size="sm"
-						onClick={handleDelete}
-					>
-						<TrashIcon weight="fill" />
-						<span>Delete</span>
-					</Button>
-				</div>
+			<div className="flex items-center px-2 py-1 border-b gap-2">
+				<Button
+					type="button"
+					variant="outline"
+					onClick={handleComplete}
+					size="icon-sm"
+					className="rounded-full group size-6"
+				>
+					<CheckIcon className="size-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+				</Button>
+				<span className="flex-1">{task.content}</span>
+				<Button
+					type="button"
+					variant="ghost"
+					size="icon-sm"
+					onClick={handleDelete}
+				>
+					<TrashIcon weight="fill" />
+					<span className="sr-only">Delete</span>
+				</Button>
 			</div>
 			<div className="flex items-center gap-2 p-2">
 				<DueDate
