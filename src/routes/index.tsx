@@ -68,7 +68,7 @@ function RouteComponent() {
 					href="https://jxd.dev"
 					target="_blank"
 					rel="noopener noreferrer"
-					className="text-sm inline-flex items-center gap-1.5"
+					className="text-sm inline-flex items-center justify-center gap-1 flex-wrap"
 				>
 					<span>Built with</span>
 					<HeartIcon className="size-4" weight="duotone" />
