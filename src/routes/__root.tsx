@@ -1,5 +1,6 @@
 /// <reference types="vite/client" />
 
+import { Databuddy } from "@databuddy/sdk/react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import {
 	createRootRoute,
@@ -57,6 +58,10 @@ function RootComponent() {
 		<QueryClientProvider client={queryClient}>
 			<RootDocument>
 				<Outlet />
+				<Databuddy
+					clientId={import.meta.env.VITE_DATABUDDY_ID}
+					enableBatching={true}
+				/>
 			</RootDocument>
 		</QueryClientProvider>
 	);

@@ -6,4 +6,6 @@ export const env = createEnv({
 	DATABASE_URL: "string.url",
 
 	OPENAI_API_KEY: "string",
+
+	VITE_DATABUDDY_ID: "string",
 });
