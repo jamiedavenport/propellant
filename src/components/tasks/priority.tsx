@@ -17,48 +17,50 @@ type Props = {
 const priorityConfig = {
 	none: {
 		label: "None",
-		color: "text-muted-foreground",
+		color: "bg-muted-foreground",
 	},
 	low: {
 		label: "Low",
-		color: "text-yellow-600",
+		color: "bg-yellow-600",
 	},
 	medium: {
 		label: "Medium",
-		color: "text-blue-600",
+		color: "bg-blue-600",
 	},
 	high: {
 		label: "High",
-		color: "text-red-600",
+		color: "bg-red-600",
 	},
 };
 
 export function PrioritySelect({ value, onChange }: Props) {
 	const config = priorityConfig[value];
 
+	console.log(config);
+
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger asChild>
-				<InputGroupButton variant="ghost">
-					<FlagIcon weight="duotone" className={cn(config.color)} />
-					<span className="capitalize">{config.label}</span>
-				</InputGroupButton>
-			</DropdownMenuTrigger>
-			<DropdownMenuContent>
+			<DropdownMenuTrigger
+				className={cn(
+					"h-4 w-1.5 rounded cursor-pointer foucs:outline-none",
+					config.color,
+				)}
+			/>
+			<DropdownMenuContent align="start">
 				<DropdownMenuItem onSelect={() => onChange("none")}>
-					<FlagIcon weight="duotone" className={priorityConfig.none.color} />
+					<div className={cn("h-4 w-1 rounded", priorityConfig.none.color)} />
 					<span>None</span>
 				</DropdownMenuItem>
 				<DropdownMenuItem onSelect={() => onChange("low")}>
-					<FlagIcon weight="duotone" className={priorityConfig.low.color} />
+					<div className={cn("h-4 w-1 rounded", priorityConfig.low.color)} />
 					<span>Low</span>
 				</DropdownMenuItem>
 				<DropdownMenuItem onSelect={() => onChange("medium")}>
-					<FlagIcon weight="duotone" className={priorityConfig.medium.color} />
+					<div className={cn("h-4 w-1 rounded", priorityConfig.medium.color)} />
 					<span>Medium</span>
 				</DropdownMenuItem>
 				<DropdownMenuItem onSelect={() => onChange("high")}>
-					<FlagIcon weight="duotone" className={priorityConfig.high.color} />
+					<div className={cn("h-4 w-1 rounded", priorityConfig.high.color)} />
 					<span>High</span>
 				</DropdownMenuItem>
 			</DropdownMenuContent>

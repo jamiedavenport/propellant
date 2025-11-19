@@ -51,28 +51,27 @@ export function Task({ task }: Props) {
 	};
 
 	return (
-		<div className="border rounded-lg overflow-hidden shadow-xs">
-			<div className="flex items-center px-2 py-1 border-b gap-2">
-				<Button
-					type="button"
-					variant="outline"
-					onClick={handleComplete}
-					size="icon-sm"
-					className="rounded-full group size-6"
-				>
-					<CheckIcon className="size-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-				</Button>
-				<span className="flex-1">{task.content}</span>
-				<Button
-					type="button"
-					variant="ghost"
-					size="icon-sm"
-					onClick={handleDelete}
-				>
-					<TrashIcon weight="fill" />
-					<span className="sr-only">Delete</span>
-				</Button>
-			</div>
+		<div className="p-3 flex items-center gap-3">
+			<PrioritySelect
+				value={task.priority}
+				onChange={async (value) => {
+					await updateTask({
+						data: {
+							id: task.id,
+							priority: value,
+						},
+					});
+					router.invalidate();
+				}}
+			/>
+			<button
+				type="button"
+				onClick={handleComplete}
+				className="rounded group size-6 border group flex items-center justify-center"
+			>
+				<CheckIcon className="size-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+			</button>
+			<div className="flex-1 text-sm font-medium">{task.content}</div>
 			<div className="flex items-center gap-2 p-2">
 				<DueDate
 					value={task.dueDate ? new Date(task.dueDate) : null}
@@ -81,18 +80,6 @@ export function Task({ task }: Props) {
 							data: {
 								id: task.id,
 								dueDate: value ? value.toISOString() : null,
-							},
-						});
-						router.invalidate();
-					}}
-				/>
-				<PrioritySelect
-					value={task.priority}
-					onChange={async (value) => {
-						await updateTask({
-							data: {
-								id: task.id,
-								priority: value,
 							},
 						});
 						router.invalidate();
