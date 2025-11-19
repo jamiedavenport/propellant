@@ -11,6 +11,7 @@ import {
 import type { ReactNode } from "react";
 import { getAuth } from "~/auth/functions";
 import { queryClient } from "~/lib/query-client";
+import logo from "../assets/logo.svg?url";
 import styles from "../styles.css?url";
 
 export const Route = createRootRoute({
@@ -34,13 +35,7 @@ export const Route = createRootRoute({
 			},
 			{
 				rel: "icon",
-				href: "/favicon.png",
-				sizes: "96x96",
-				type: "image/png",
-			},
-			{
-				rel: "icon",
-				href: "/favicon.svg",
+				href: logo,
 				type: "image/svg+xml",
 			},
 		],

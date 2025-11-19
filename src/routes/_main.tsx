@@ -24,6 +24,7 @@ import {
 	SidebarGroupAction,
 	SidebarGroupContent,
 	SidebarGroupLabel,
+	SidebarHeader,
 	SidebarInset,
 	SidebarMenu,
 	SidebarMenuButton,
@@ -32,6 +33,7 @@ import {
 } from "~/components/ui/sidebar";
 import { TagsProvider } from "~/context/tags";
 import { listTags } from "~/tags";
+import logo from "../assets/logo.svg?url";
 
 export const Route = createFileRoute("/_main")({
 	component: RouteComponent,
@@ -49,7 +51,10 @@ function RouteComponent() {
 	return (
 		<TagsProvider tags={tags}>
 			<SidebarProvider>
-				<Sidebar>
+				<Sidebar variant="inset">
+					<SidebarHeader>
+						<img src={logo} alt="Propellant" className="size-8" />
+					</SidebarHeader>
 					<SidebarContent>
 						<SidebarGroup>
 							{/* <SidebarGroupLabel>Unlabeled</SidebarGroupLabel> */}
