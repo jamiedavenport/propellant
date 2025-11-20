@@ -1,7 +1,7 @@
 import { CalendarIcon } from "@phosphor-icons/react";
 import { dayjs } from "~/dayjs";
+import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
-import { InputGroupButton } from "../ui/input-group";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 type Props = {
@@ -13,12 +13,12 @@ export function DueDate({ value, onChange }: Props) {
 	return (
 		<Popover>
 			<PopoverTrigger asChild>
-				<InputGroupButton variant="ghost">
-					<CalendarIcon weight="duotone" />
-					<span>{value ? dayjs(value).format("DD/MM/YYYY") : "Due Date"}</span>
-				</InputGroupButton>
+				<Button variant="ghost" size={value ? "sm" : "icon-sm"}>
+					<CalendarIcon />
+					{value && <span>{dayjs(value).format("DD/MM/YYYY")}</span>}
+				</Button>
 			</PopoverTrigger>
-			<PopoverContent>
+			<PopoverContent align="end" className="p-0 w-fit">
 				<Calendar
 					mode="single"
 					selected={value ? value : undefined}

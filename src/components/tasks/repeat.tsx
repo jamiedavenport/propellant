@@ -1,12 +1,12 @@
 import { RepeatIcon } from "@phosphor-icons/react";
 import type { Repeat } from "~/repeat";
+import { Button } from "../ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { InputGroupButton } from "../ui/input-group";
 
 type Props = {
 	value: Repeat;
@@ -17,12 +17,12 @@ export function RepeatSelect({ value, onChange }: Props) {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<InputGroupButton variant="ghost">
+				<Button variant="ghost" size={value !== "never" ? "sm" : "icon-sm"}>
 					<RepeatIcon weight="duotone" />
-					<span className="capitalize">{value}</span>
-				</InputGroupButton>
+					{value !== "never" && <span className="capitalize">{value}</span>}
+				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent>
+			<DropdownMenuContent align="end">
 				<DropdownMenuItem onSelect={() => onChange("never")}>
 					Never
 				</DropdownMenuItem>

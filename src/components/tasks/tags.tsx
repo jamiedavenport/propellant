@@ -3,6 +3,7 @@ import { useState } from "react";
 import { getIcon } from "~/components/icons";
 import { useTags } from "~/context/tags";
 import { NewTag } from "../tags/new";
+import { Button } from "../ui/button";
 import {
 	Command,
 	CommandEmpty,
@@ -11,7 +12,6 @@ import {
 	CommandItem,
 	CommandList,
 } from "../ui/command";
-import { InputGroupButton } from "../ui/input-group";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 type Props = {
@@ -35,33 +35,18 @@ export function Tags({ value, onChange }: Props) {
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
-				<InputGroupButton variant="ghost" className="min-w-0">
-					{selectedTags.length > 0 ? (
-						<div className="flex items-center gap-1">
-							{selectedTags.slice(0, 3).map((tag) => {
-								const Icon = getIcon(tag.icon);
-								return (
-									<div key={tag.id} className="flex items-center gap-1 text-xs">
-										{Icon && <Icon weight="duotone" className="w-3 h-3" />}
-										<span className="truncate max-w-16">{tag.name}</span>
-									</div>
-								);
-							})}
-							{selectedTags.length > 3 && (
-								<span className="text-xs text-muted-foreground ml-1">
-									+{selectedTags.length - 3}
-								</span>
-							)}
-						</div>
-					) : (
-						<>
-							<HashIcon weight="duotone" />
-							<span>Select tags</span>
-						</>
+				<Button
+					variant="ghost"
+					size={value.length > 0 ? "sm" : "icon-sm"}
+					className="min-w-0"
+				>
+					<HashIcon />
+					{selectedTags.length > 0 && (
+						<span>{selectedTags.map((tag) => tag.name).join(", ")}</span>
 					)}
-				</InputGroupButton>
+				</Button>
 			</PopoverTrigger>
-			<PopoverContent className="w-[300px] p-0">
+			<PopoverContent className="w-[300px] p-0" align="end">
 				<Command>
 					<CommandInput placeholder="Search tags..." className="h-9" />
 					<CommandList>
