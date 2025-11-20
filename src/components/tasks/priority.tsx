@@ -7,7 +7,6 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { InputGroupButton } from "../ui/input-group";
 
 type Props = {
 	value: Priority;
@@ -25,7 +24,7 @@ const priorityConfig = {
 	},
 	medium: {
 		label: "Medium",
-		color: "bg-blue-600",
+		color: "bg-orange-600",
 	},
 	high: {
 		label: "High",

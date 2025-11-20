@@ -114,8 +114,8 @@ export const listTasks = createServerFn({
 			},
 			where,
 			orderBy: [
-				desc(schema.task.dueDate),
 				sql`array_position(array['high', 'low', 'medium', 'none'], ${schema.task.priority})`,
+				desc(schema.task.dueDate),
 			],
 		});
 
