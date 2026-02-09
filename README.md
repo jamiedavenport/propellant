@@ -1,5 +1,7 @@
 # Propellant
 
+> Propellant is joining [Lucid](https://lucid.jxd.dev)
+
 ## Getting Started
 
 ```sh
